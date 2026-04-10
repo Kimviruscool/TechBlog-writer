@@ -27,11 +27,11 @@ def execute_blog_automation(topic: str):
     print("노션 업로드 중...")
     upload_success = upload_to_notion(topic, clean_content)
 
-    # 5. 디스코드 알림
+    # 5. 디스코드 알림 및 결과 반환
     if upload_success:
         send_discord_alert(f"✅ TechBlog-Writer: '{topic}' 포스팅이 노션에 성공적으로 업로드되었습니다!")
         print("파이프라인 완료!")
-        return {"status": "success", "topic": topic}
+        return {"status": "success", "topic": topic, "content": clean_content}  # content 반환 추가
     else:
         send_discord_alert(f"⚠️ TechBlog-Writer: '{topic}' 글쓰기는 완료되었으나 노션 업로드에 실패했습니다.")
-        return {"status": "error", "message": "Notion upload failed"}
+        return {"status": "partial", "topic": topic, "content": clean_content}  # 업로드 실패여도 content 반환
