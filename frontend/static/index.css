@@ -1,1 +1,784 @@
-1
+/* =====================================================
+   CSS VARIABLES & RESET
+   ===================================================== */
+:root {
+  --bg-page:       #e8e8e8;           /* 페이지 배경색 */
+  --bg-surface:    #ffffff;           /* 카드/패널 배경색 */
+  --bg-surface-2:  #f5f5f7;           /* 보조 패널 배경색 */
+  --bg-sidebar:    #ffffff;           /* 사이드바 배경색 */
+  --border:        #ebebeb;           /* 기본 테두리색 */
+  --border-light:  #f0f0f0;           /* 연한 테두리색 */
+  --text-primary:  #1a1a2e;           /* 기본 텍스트색 */
+  --text-secondary:#6b7280;           /* 보조 텍스트색 */
+  --text-muted:    #9ca3af;           /* 흐린 텍스트색 */
+  --accent:        #e74c3c;           /* 강조색 (레드) */
+  --accent-blue:   #3b6ef8;           /* 파란 강조색 */
+  --accent-green:  #22c55e;           /* 초록 강조색 */
+  --status-exec:   #3b6ef8;           /* 실행됨 상태 색상 */
+  --status-sched:  #f59e0b;           /* 예정됨 상태 색상 */
+  --pill-active-bg:#1a1a2e;           /* 활성 태스크 필 배경 */
+  --pill-active-fg:#ffffff;           /* 활성 태스크 필 텍스트 */
+  --radius-sm:     6px;               /* 소형 둥글기 */
+  --radius:        12px;              /* 기본 둥글기 */
+  --radius-lg:     16px;              /* 대형 둥글기 */
+  --radius-xl:     20px;              /* 특대 둥글기 */
+  --shadow-sm:     0 1px 3px rgba(0,0,0,.06);          /* 소형 그림자 */
+  --shadow:        0 2px 10px rgba(0,0,0,.07);         /* 기본 그림자 */
+  --shadow-md:     0 4px 20px rgba(0,0,0,.09);         /* 중형 그림자 */
+  --font:          'DM Sans', sans-serif;               /* 기본 폰트 */
+  --topbar-h:      56px;              /* 상단바 높이 */
+  --sidebar-w:     52px;              /* 사이드바 너비 */
+  --transition:    .18s ease;         /* 기본 트랜지션 */
+}
+
+/* 다크 모드 변수 오버라이드 */
+body.dark-mode {
+  --bg-page:       #151520;
+  --bg-surface:    #1e1e2e;
+  --bg-surface-2:  #252535;
+  --bg-sidebar:    #1e1e2e;
+  --border:        #2e2e42;
+  --border-light:  #2a2a3c;
+  --text-primary:  #e8e8f0;
+  --text-secondary:#8888a8;
+  --text-muted:    #555575;
+  --pill-active-bg:#3b6ef8;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,.3);
+  --shadow:        0 2px 10px rgba(0,0,0,.3);
+  --shadow-md:     0 4px 20px rgba(0,0,0,.4);
+}
+
+/* =====================================================
+   GLOBAL RESET
+   ===================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;             /* 박스 모델 통일 */
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;                   /* 전체 스크롤 방지 */
+}
+
+body {
+  font-family: var(--font);           /* 전역 폰트 적용 */
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  transition: background var(--transition), color var(--transition);
+}
+
+img { display: block; }
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* =====================================================
+   TOP NAVIGATION BAR
+   ===================================================== */
+.topbar {
+  position: fixed;                    /* 상단 고정 */
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px 0 12px;
+  gap: 0;
+  z-index: 100;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.topbar__left {
+  flex: 0 0 auto;
+  margin-right: 12px;
+}
+
+.topbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar__brand {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -.3px;
+  color: var(--text-primary);
+}
+
+/* 상단 네비게이션 링크 */
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 2px;
+}
+
+.nav-link {
+  padding: 6px 13px;
+  border-radius: 20px;                /* 둥근 필 형태 */
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+.nav-link--active {
+  background: var(--text-primary);   /* 활성 탭 배경 */
+  color: var(--bg-surface) !important;
+}
+
+/* 우측 아이콘 영역 */
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.topbar__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 6px;
+  cursor: pointer;
+  border: 2px solid var(--border);
+}
+
+.topbar__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =====================================================
+   ICON BUTTONS (공통)
+   ===================================================== */
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: background var(--transition), color var(--transition);
+  position: relative;
+}
+
+.icon-btn:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+/* 알림 뱃지 */
+.badge {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* =====================================================
+   MAIN LAYOUT
+   ===================================================== */
+.layout {
+  display: flex;
+  padding-top: var(--topbar-h);       /* 상단바 높이만큼 오프셋 */
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+.sidebar {
+  flex: 0 0 var(--sidebar-w);
+  width: var(--sidebar-w);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 2px;
+  overflow-y: auto;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.sidebar__back {
+  margin-bottom: 6px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.sidebar__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  position: relative;                 /* 툴팁용 */
+}
+
+.sidebar__icon--active,
+.sidebar__icon--light-active {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+/* 사이드바 툴팁 */
+.sidebar__icon[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--text-primary);
+  color: var(--bg-surface);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+}
+
+.sidebar__bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* =====================================================
+   MAIN CONTENT AREA
+   ===================================================== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg-page);
+  transition: background var(--transition);
+}
+
+.page-header {
+  flex: 0 0 auto;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -.4px;
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   BOARD SECTION (칸반 영역)
+   ===================================================== */
+.board-section {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  transition: background var(--transition);
+}
+
+.board-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.board-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: auto;
+}
+
+/* 팀원 아바타 그룹 */
+.board-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.board-avatars .av {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+  margin-left: -8px;
+  object-fit: cover;
+  position: relative;
+}
+
+.board-avatars .av:first-child { margin-left: 0; }
+
+.board-avatars .av-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-surface);
+  margin-left: -8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 보드 액션 버튼 그룹 */
+.board-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.action-btn:hover {
+  background: var(--bg-surface-2);
+  border-color: var(--text-muted);
+}
+
+/* =====================================================
+   KANBAN BOARD (칸반 보드 레이아웃)
+   ===================================================== */
+.kanban-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;  /* 4열 균등 분할 */
+  gap: 12px;
+  align-items: start;
+}
+
+.kanban-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg-surface-2);
+  border-radius: var(--radius-lg);
+  padding: 10px 10px 0;
+  transition: background var(--transition);
+  min-height: 220px;
+}
+
+.kanban-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+.kanban-col-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 8px;
+  letter-spacing: .2px;
+}
+
+/* =====================================================
+   KANBAN CARDS (기본 카드)
+   ===================================================== */
+.kanban-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.kanban-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.card-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.card-row--top {
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.card-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.card-checks {
+  display: flex;
+  gap: 4px;
+}
+
+.check-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  transition: all var(--transition);
+}
+
+.check-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+.check-btn--done {
+  border-color: var(--accent-blue);  /* 완료된 체크박스 */
+  color: var(--accent-blue);
+}
+
+.card-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* =====================================================
+   TASK CARDS (태스크 카드)
+   ===================================================== */
+.kanban-task-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.kanban-task-card:hover { box-shadow: var(--shadow); }
+
+.kanban-task-card--highlight {
+  border: 1.5px solid var(--border);  /* 강조 카드 테두리 */
+}
+
+.kanban-task-card--add {
+  background: transparent;            /* 추가 버튼 카드는 배경 없음 */
+  box-shadow: none;
+  border: 1.5px dashed var(--border);
+}
+
+.task-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.task-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.task-name--bold {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.more-btn {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 0 2px;
+  letter-spacing: 1px;
+  line-height: 1;
+  transition: color var(--transition);
+}
+
+.more-btn:hover { color: var(--text-primary); }
+
+.add-task-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.add-task-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+/* =====================================================
+   NEW TASKS COLUMN (태스크 그리드)
+   ===================================================== */
+.kanban-col--tasks {
+  background: transparent;            /* 태스크 컬럼은 배경 없음 */
+  padding: 0;
+}
+
+.new-tasks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;    /* 2열 그리드 */
+  gap: 7px;
+}
+
+.task-pill {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition), transform .15s ease;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.task-pill:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);       /* 호버 시 살짝 들림 */
+}
+
+.task-pill--active {
+  background: var(--pill-active-bg); /* 활성 태스크 강조 */
+  color: var(--pill-active-fg);
+  box-shadow: var(--shadow-md);
+}
+
+.task-pill--active span { color: inherit; }
+
+/* =====================================================
+   BOTTOM GRID (하단 2열 레이아웃)
+   ===================================================== */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;    /* 좌우 동일 비율 */
+  gap: 14px;
+}
+
+.bottom-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  transition: background var(--transition);
+}
+
+.bottom-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.bottom-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: auto;
+}
+
+/* =====================================================
+   KNOWLEDGE TABLE (지식 테이블)
+   ===================================================== */
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;         /* 테이블 테두리 합치기 */
+}
+
+.knowledge-table th {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 0 6px 8px;
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.knowledge-table td {
+  padding: 8px 6px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.knowledge-table tr:last-child td { border-bottom: none; }
+
+.knowledge-table tr:hover td {
+  background: var(--bg-surface-2);   /* 행 호버 강조 */
+}
+
+/* 행 별 별표 버튼 */
+.star-cell { width: 20px; }
+
+.star-cell button {
+  color: var(--text-muted);
+  font-size: 13px;
+  transition: color var(--transition);
+}
+
+.star-cell button:hover { color: var(--status-sched); }
+
+/* 상태 뱃지 */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.status-badge--exec {
+  background: rgba(59,110,248,.12);
+  color: var(--status-exec);
+}
+
+.status-badge--sched {
+  background: rgba(245,158,11,.12);
+  color: var(--status-sched);
+}
+
+/* =====================================================
+   TICKET JOURNEY CHART (티켓 도넛 차트)
+   ===================================================== */
+.ticket-chart-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+}
+
+.ticket-donut {
+  position: relative;                /* 중앙 숫자 오버레이용 */
+  width: 100px;
+  height: 100px;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donut-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.ticket-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  align-self: center;
+}
+
+.executed-label { color: var(--status-exec); }   /* 실행됨 라벨 */
+.active-label   { color: var(--accent); }        /* 활성 라벨 */
+
+/* =====================================================
+   SCROLLBAR STYLING (스크롤바 커스텀)
+   ===================================================== */
+.main-content::-webkit-scrollbar { width: 5px; }
+.main-content::-webkit-scrollbar-track { background: transparent; }
+.main-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+/* =====================================================
+   RESPONSIVE (반응형 - 작은 화면)
+   ===================================================== */
+@media (max-width: 900px) {
+  .kanban-board {
+    grid-template-columns: 1fr 1fr;   /* 2열로 축소 */
+  }
+  .bottom-grid {
+    grid-template-columns: 1fr;       /* 단열 레이아웃 */
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar__nav { display: none; }     /* 모바일에서 탑바 숨김 */
+  .kanban-board { grid-template-columns: 1fr; }
+}

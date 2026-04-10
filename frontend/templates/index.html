@@ -1,10 +1,399 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TechBlog-Writer </title>
+  <meta charset="UTF-8" />                                          <!-- 문자셋 설정 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- 반응형 뷰포트 -->
+  <title>SugarCRM – Customer Journeys</title>                       <!-- 페이지 타이틀 -->
+  <link rel="stylesheet" href="/static/index.css" />                        <!-- 외부 CSS 연결 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <h1> Tech Blog Writer Dash Board</h1>
+
+  <!-- ===== TOP NAVIGATION BAR ===== -->
+  <header class="topbar" id="topbar">
+    <div class="topbar__left">
+      <div class="topbar__logo">                                     <!-- 로고 영역 -->
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect width="10" height="10" rx="2" fill="#E74C3C"/>
+          <rect x="12" width="10" height="10" rx="2" fill="#E74C3C" opacity=".6"/>
+          <rect y="12" width="10" height="10" rx="2" fill="#E74C3C" opacity=".4"/>
+          <rect x="12" y="12" width="10" height="10" rx="2" fill="#E74C3C" opacity=".2"/>
+        </svg>
+        <span class="topbar__brand">sugarcrm</span>               <!-- 브랜드명 -->
+      </div>
+    </div>
+
+    <nav class="topbar__nav" id="topbarNav">                        <!-- 상단 내비게이션 -->
+      <a href="#" class="nav-link" data-page="relationship">Relationship</a>
+      <a href="#" class="nav-link" data-page="opportunities">Opportunities</a>
+      <a href="#" class="nav-link" data-page="leads">Leads</a>
+      <a href="#" class="nav-link" data-page="calendar">Calendar</a>
+      <a href="#" class="nav-link nav-link--active" data-page="cases">Cases</a>  <!-- 활성 탭 -->
+      <a href="#" class="nav-link" data-page="reports">Reports</a>
+      <a href="#" class="nav-link" data-page="quotes">Quotes</a>
+    </nav>
+
+    <div class="topbar__right">                                     <!-- 우측 아이콘 영역 -->
+      <button class="icon-btn" id="btnSearch" aria-label="Search">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="btnMsg" aria-label="Messages">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 14l2-2h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn badge-btn" id="btnNotif" aria-label="Notifications">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 00-5 5v3l-1.5 2H14.5L13 9V6a5 5 0 00-5-5z" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 13a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span class="badge">3</span>                               <!-- 알림 뱃지 -->
+      </button>
+      <div class="topbar__avatar" id="userAvatar">                  <!-- 사용자 아바타 -->
+        <img src="https://i.pravatar.cc/36?img=47" alt="User" />
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT WRAPPER ===== -->
+  <div class="layout">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar__back icon-btn" id="btnBack" aria-label="Back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <nav class="sidebar__nav">                                     <!-- 사이드바 아이콘 내비 -->
+        <button class="sidebar__icon icon-btn" data-tip="Share" aria-label="Share">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="13" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="3" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><circle cx="13" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 7l6-3M5 9l6 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Upload" aria-label="Upload">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 10V3M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn sidebar__icon--active" data-tip="Star" aria-label="Star">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Add" aria-label="Add">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Mobile" aria-label="Mobile">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="1" width="8" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="12" r="1" fill="currentColor"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Layers" aria-label="Layers">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 5l-6 3L2 5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 8l6 3 6-3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 11l6 3 6-3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Calendar" aria-label="Calendar">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 7h14" stroke="currentColor" stroke-width="1.5"/><path d="M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn" data-tip="Send" aria-label="Send">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M14 2L1 7l5 2 2 5 6-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
+      </nav>
+
+      <div class="sidebar__bottom">                                  <!-- 사이드바 하단 토글 -->
+        <button class="sidebar__icon icon-btn" id="btnDarkMode" data-tip="Dark Mode" aria-label="Dark Mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 10A6 6 0 016 3a6 6 0 107 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="sidebar__icon icon-btn sidebar__icon--light-active" id="btnLightMode" data-tip="Light Mode" aria-label="Light Mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content" id="mainContent">
+
+      <!-- Page Title -->
+      <div class="page-header">
+        <h1 class="page-title">Customer Journeys</h1>            <!-- 페이지 제목 -->
+      </div>
+
+      <!-- ===== KANBAN BOARD SECTION ===== -->
+      <section class="board-section" id="boardSection">
+        <div class="board-header">
+          <h2 class="board-title">New Case Managment</h2>          <!-- 보드 제목 -->
+          <div class="board-avatars" id="boardAvatars">            <!-- 팀원 아바타 목록 -->
+            <!-- JS로 동적 렌더링 -->
+          </div>
+          <div class="board-actions">
+            <button class="action-btn" id="btnBoardAdd" aria-label="Add">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <button class="action-btn" aria-label="Share">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="action-btn" aria-label="Calendar">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h12M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Kanban Columns -->
+        <div class="kanban-board" id="kanbanBoard">
+
+          <!-- Column 1: Case Allocation -->
+          <div class="kanban-col" data-col="case-allocation">
+            <div class="kanban-cards" id="colCaseAllocation">
+
+              <div class="kanban-card">
+                <div class="card-row card-row--top">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=11" alt="User" />
+                  <div class="card-checks">
+                    <button class="check-btn check-btn--done" aria-label="Done"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+                    <button class="check-btn" aria-label="Calendar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M3.5 1v2M8.5 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+                  </div>
+                </div>
+                <p class="card-text">Allocate Case to User!</p>   <!-- 카드 텍스트 -->
+              </div>
+
+              <div class="kanban-card kanban-card--bottom">
+                <div class="card-row card-row--top">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=22" alt="User" />
+                  <div class="card-checks">
+                    <button class="check-btn check-btn--done" aria-label="Done"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+                    <button class="check-btn" aria-label="Calendar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M3.5 1v2M8.5 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+                  </div>
+                </div>
+                <p class="card-text">Acknowledge Case receipt to customer!</p>
+              </div>
+
+            </div>
+            <div class="kanban-col-label">Case Allocation</div>    <!-- 컬럼 레이블 -->
+          </div>
+
+          <!-- Column 2: Issue Identification -->
+          <div class="kanban-col" data-col="issue-identification">
+            <div class="kanban-cards" id="colIssueIdent">
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=33" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Identify Issue</span>
+                    <span class="task-name">Category</span>
+                  </div>
+                  <div class="card-checks">
+                    <button class="check-btn check-btn--done" aria-label="Done"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+                    <button class="check-btn" aria-label="Calendar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M3.5 1v2M8.5 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=44" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Identify Issue</span>
+                    <span class="task-name">Severity</span>
+                  </div>
+                  <div class="card-checks">
+                    <button class="check-btn check-btn--done" aria-label="Done"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+                    <button class="check-btn" aria-label="Calendar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M3.5 1v2M8.5 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=55" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Identify Issue</span>
+                    <span class="task-name">Impact</span>
+                  </div>
+                  <div class="card-checks">
+                    <button class="check-btn check-btn--done" aria-label="Done"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button>
+                    <button class="check-btn" aria-label="Calendar"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M3.5 1v2M8.5 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=66" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Allocate to</span>
+                    <span class="task-name">Resolution Team</span>
+                  </div>
+                  <button class="more-btn" aria-label="More">···</button>
+                </div>
+              </div>
+
+              <div class="kanban-task-card kanban-task-card--highlight">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=77" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Advise Customer</span>
+                    <span class="task-name task-name--bold">of Resolution estimate</span>
+                  </div>
+                  <button class="more-btn" aria-label="More">···</button>
+                </div>
+              </div>
+
+            </div>
+            <div class="kanban-col-label">Issue Identification</div>
+          </div>
+
+          <!-- Column 3: Technical Resolution -->
+          <div class="kanban-col" data-col="technical-resolution">
+            <div class="kanban-cards" id="colTechRes">
+
+              <div class="kanban-task-card kanban-task-card--add">
+                <div class="task-card-header">
+                  <button class="add-task-btn" aria-label="Add task">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </button>
+                  <div class="task-info">
+                    <span class="task-label">Identify Issue</span>
+                    <span class="task-name">Dependencies</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-task-card kanban-task-card--add">
+                <div class="task-card-header">
+                  <button class="add-task-btn" aria-label="Add task">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </button>
+                  <div class="task-info">
+                    <span class="task-label">Identify Issue</span>
+                    <span class="task-name">Resolution</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=12" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Estimate</span>
+                    <span class="task-name task-name--bold">Resolution Time</span>
+                  </div>
+                  <button class="more-btn" aria-label="More">···</button>
+                </div>
+              </div>
+
+              <div class="kanban-task-card">
+                <div class="task-card-header">
+                  <img class="card-avatar" src="https://i.pravatar.cc/32?img=23" alt="User" />
+                  <div class="task-info">
+                    <span class="task-label">Advise Customer</span>
+                    <span class="task-name">of Resolution Estimate</span>
+                  </div>
+                  <button class="more-btn" aria-label="More">···</button>
+                </div>
+              </div>
+
+              <div class="kanban-task-card kanban-task-card--add">
+                <div class="task-card-header">
+                  <button class="add-task-btn" aria-label="Add task">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </button>
+                  <div class="task-info">
+                    <span class="task-label">Advise Customer</span>
+                    <span class="task-name">Issue Resolved</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="kanban-col-label">Technical Resolution</div>
+          </div>
+
+          <!-- Column 4: New Tasks -->
+          <div class="kanban-col kanban-col--tasks" data-col="new-tasks">
+            <div class="new-tasks-grid" id="newTasksGrid">
+              <div class="task-pill task-pill--active">
+                <span>Request</span>
+                <span>Processing</span>
+              </div>
+              <div class="task-pill">
+                <span>Problem</span>
+                <span>Resolution</span>
+              </div>
+              <div class="task-pill">
+                <span>Customer</span>
+                <span>Communication</span>
+              </div>
+              <div class="task-pill">
+                <span>Testing and</span>
+                <span>Verification</span>
+              </div>
+              <div class="task-pill">
+                <span>Customer</span>
+                <span>Notification</span>
+              </div>
+              <div class="task-pill">
+                <span>Customer</span>
+                <span>Satisfaction</span>
+              </div>
+            </div>
+            <div class="kanban-col-label">New Tasks</div>
+          </div>
+
+        </div><!-- /kanban-board -->
+      </section>
+
+      <!-- ===== BOTTOM SECTION ===== -->
+      <div class="bottom-grid">
+
+        <!-- Suggested Knowledge Table -->
+        <section class="bottom-card" id="knowledgeSection">
+          <div class="bottom-card-header">
+            <h3 class="bottom-card-title">Suggested Knowledge</h3>  <!-- 섹션 제목 -->
+            <div class="board-actions">
+              <button class="action-btn" aria-label="Add"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+              <button class="action-btn" aria-label="Share"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="action-btn" aria-label="Calendar"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h12M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+          <table class="knowledge-table" id="knowledgeTable">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Subject</th>                                   <!-- 주제 컬럼 -->
+                <th>Status</th>                                    <!-- 상태 컬럼 -->
+                <th>Start Date</th>                                <!-- 시작일 컬럼 -->
+                <th>End Date</th>                                  <!-- 종료일 컬럼 -->
+                <th>Assigned User</th>                             <!-- 담당자 컬럼 -->
+              </tr>
+            </thead>
+            <tbody id="knowledgeTableBody">
+              <!-- JS로 동적 렌더링 -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Support Ticket Journey -->
+        <section class="bottom-card" id="ticketSection">
+          <div class="bottom-card-header">
+            <h3 class="bottom-card-title">Support Ticket Journey</h3>  <!-- 섹션 제목 -->
+            <div class="board-actions">
+              <button class="action-btn" aria-label="Add"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+              <button class="action-btn" aria-label="Share"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="action-btn" aria-label="Calendar"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M1 6h12M4 1v2M10 1v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+          <div class="ticket-chart-wrap">
+            <div class="ticket-donut" id="ticketDonutExecuted">   <!-- 실행 도넛 차트 -->
+              <canvas id="chartExecuted" width="100" height="100"></canvas>
+              <div class="donut-center">
+                <span class="donut-num" id="numExecuted">5</span>
+              </div>
+            </div>
+            <span class="ticket-label executed-label">Executed</span>
+            <div class="ticket-donut" id="ticketDonutActive">     <!-- 활성 도넛 차트 -->
+              <canvas id="chartActive" width="100" height="100"></canvas>
+              <div class="donut-center">
+                <span class="donut-num" id="numActive">7</span>
+              </div>
+            </div>
+            <span class="ticket-label active-label">Active</span>
+          </div>
+        </section>
+
+      </div><!-- /bottom-grid -->
+
+    </main><!-- /main-content -->
+  </div><!-- /layout -->
+
+  <script src="/static/index.js"></script>                                    <!-- 외부 JS 연결 -->
 </body>
 </html>
