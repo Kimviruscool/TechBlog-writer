@@ -1,36 +1,63 @@
 # backend/api/claude_ai.py
+# pip install ollama
 import os
-from anthropic import Anthropic
+import ollama                                                         # Ollama 공식 Python 패키지
 from dotenv import load_dotenv
 
 # =====================================================
-# 클라이언트 초기화
+# Ollama 클라이언트 초기화
 # =====================================================
 
-def get_client() -> Anthropic:
-    """Anthropic 클라이언트를 반환합니다."""
+def get_client() -> ollama.Client:
+    """
+    .env 에서 설정을 읽어 Ollama 클라이언트를 생성하고 반환합니다.
+
+    .env 설정값:
+        OLLAMA_HOST  : Ollama 서버 주소 (기본값: http://localhost:11434)
+        OLLAMA_API_KEY: API 키 - 외부 호스팅 서비스 또는 인증이 필요한 경우 설정
+    """
     load_dotenv()                                                    # .env 파일 로드
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise ValueError("[ERROR] .env 파일에서 ANTHROPIC_API_KEY를 찾을 수 없습니다.")
-    return Anthropic(api_key=api_key)
+
+    host    = os.getenv("OLLAMA_HOST",    "http://localhost:11434") # 서버 주소
+    api_key = os.getenv("OLLAMA_API_KEY", "")                       # API 키 (없으면 빈 문자열)
+
+    # API 키가 있으면 Authorization 헤더에 포함하여 클라이언트 생성
+    if api_key:
+        client = ollama.Client(
+            host=host,
+            headers={"Authorization": f"Bearer {api_key}"},         # API 키 인증 헤더
+        )
+    else:
+        client = ollama.Client(host=host)                           # 로컬 환경 (인증 없음)
+
+    return client
+
+
+def get_model() -> str:
+    """
+    .env 에서 사용할 모델명을 반환합니다.
+    OLLAMA_MODEL 이 없으면 기본값 llama3 를 사용합니다.
+    """
+    load_dotenv()
+    return os.getenv("OLLAMA_MODEL", "llama3")                      # 사용 모델명
 
 # =====================================================
-# 블로그 글 2차 수정 (Claude Refine)
+# 블로그 글 2차 수정 (Ollama Refine)
 # =====================================================
 
 def refine_blog_post(html_content: str, instructions: str = "") -> str:
     """
-    Gemini가 작성한 HTML 블로그 글을 Claude가 2차 수정합니다.
+    Gemini가 작성한 HTML 블로그 글을 Ollama 모델이 2차 수정합니다.
 
     Args:
-        html_content: Gemini가 생성한 HTML 형식의 블로그 글
-        instructions: 사용자 추가 수정 지시사항 (선택)
+        html_content : Gemini가 생성한 HTML 형식의 블로그 글
+        instructions : 사용자 추가 수정 지시사항 (선택)
 
     Returns:
         수정된 HTML 문자열, 실패 시 빈 문자열
     """
-    client = get_client()
+    client = get_client()                                            # 클라이언트 생성
+    model  = get_model()                                             # 모델명 읽기
 
     extra = f"\n\n추가 수정 지시사항:\n{instructions}" if instructions.strip() else ""  # 추가 지시 삽입
 
@@ -51,12 +78,15 @@ def refine_blog_post(html_content: str, instructions: str = "") -> str:
 수정된 HTML만 출력하세요:"""
 
     try:
-        message = client.messages.create(
-            model="claude-opus-4-6",                                 # 사용 모델
-            max_tokens=4096,                                         # 최대 토큰 수
-            messages=[{"role": "user", "content": prompt}],
+        response = client.generate(                                  # Ollama generate API 호출
+            model=model,                                             # 사용 모델
+            prompt=prompt,                                           # 프롬프트 전달
         )
-        return message.content[0].text                               # 텍스트 블록 반환
+        return response.response                                     # 응답 텍스트 반환
+
+    except ollama.ResponseError as e:
+        print(f"[ERROR] Ollama 응답 오류 (status {e.status_code}): {e.error}")
+        return ""
     except Exception as e:
-        print(f"[ERROR] Claude 수정 실패: {e}")
+        print(f"[ERROR] Ollama 호출 실패: {e}")
         return ""
