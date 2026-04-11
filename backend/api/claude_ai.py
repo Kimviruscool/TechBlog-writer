@@ -61,11 +61,24 @@ def refine_blog_post(html_content: str, instructions: str = "") -> str:
 
     extra = f"\n\n추가 수정 지시사항:\n{instructions}" if instructions.strip() else ""  # 추가 지시 삽입
 
-    prompt = f"""당신은 IT 전문 에디터입니다.
+    system = (                                                       # 시스템 프롬프트: 한국어 강제 지정
+        "You are a Korean IT blog editor. "
+        "You MUST write everything in Korean (한국어). "
+        "Never use English in your response. "
+        "All output must be in Korean only."
+    )
+
+    prompt = f"""반드시 한국어로만 작성하세요. 영어 사용 금지.
+
+당신은 IT 전문 한국어 에디터입니다.
 아래는 Gemini AI가 작성한 HTML 형식의 기술 블로그 포스팅입니다.
 
-다음 기준으로 글을 개선해 주세요:
-1. 문장을 더 자연스럽고 유려하게 다듬을 것
+[필수 규칙]
+- 모든 텍스트는 반드시 한국어로 작성할 것 (영어 절대 금지)
+- HTML 태그 속성값(class, id 등)은 변경하지 말 것
+
+[수정 기준]
+1. 문장을 더 자연스럽고 유려한 한국어로 다듬을 것
 2. 기술적 정확성을 높이고 불명확한 표현을 수정할 것
 3. 제목과 소제목을 더 흥미롭게 바꿀 것
 4. 불필요한 반복을 제거하고 핵심을 강조할 것
@@ -75,12 +88,13 @@ def refine_blog_post(html_content: str, instructions: str = "") -> str:
 원본 HTML:
 {html_content}
 
-수정된 HTML만 출력하세요:"""
+한국어로 수정된 HTML만 출력하세요:"""
 
     try:
         response = client.generate(                                  # Ollama generate API 호출
             model=model,                                             # 사용 모델
             prompt=prompt,                                           # 프롬프트 전달
+            system=system,                                           # 시스템 프롬프트 (한국어 강제)
         )
         return response.response                                     # 응답 텍스트 반환
 
